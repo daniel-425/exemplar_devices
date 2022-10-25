@@ -14,13 +14,13 @@ IPAddress subnet(255, 255, 255, 0);
 
 char packetBuffer[256];
 
-const int BTN_1_PIN = 8;
-const int BTN_2_PIN = 9;
-const int BTN_3_PIN = 12;
-const int BTN_4_PIN = 13;
+const int BTN_1_PIN = 7;
+const int BTN_2_PIN = 8;
+const int BTN_3_PIN = 9;
+const int BTN_4_PIN = 12;
 
 const int LED_RED_PIN = 3;
-const int LED_GREEN_PIN = 5;
+const int LED_YELLOW_PIN = 5;
 const int LED_BLUE_PIN = 6;
 
 const int SERVER_PORT = 1234;
@@ -55,7 +55,7 @@ void setup() {
   pinMode(BTN_3_PIN, INPUT);
   pinMode(BTN_4_PIN, INPUT);
   pinMode(LED_RED_PIN, OUTPUT);
-  pinMode(LED_GREEN_PIN, OUTPUT);
+  pinMode(LED_YELLOW_PIN, OUTPUT);
   pinMode(LED_BLUE_PIN, OUTPUT);
 
   // Start the Ethernet
@@ -85,7 +85,7 @@ void loop() {
     // Check if we hace an ethernet link. 
     if (Ethernet.linkStatus() == LinkOFF) {
       Serial.println("Ethernet cable is not connected.");
-      ready = false;
+      ready = true;
     }
     else{
       ready = true;
@@ -210,147 +210,155 @@ void loop() {
 
       // Scenario 2 code. 
       // Secret combination using button 2, 3 and 4. 2343434343. Sequence of 10 so 1024 conbinations.
-      if (sequence_pos == 0){
-        if (button_2_state == HIGH){
-          sequence_pos = 1;
+      Serial.print("Current Sequence Pos: ");
+      Serial.print(sequence_pos);
+      Serial.print("\n");
+      if (button_1_state || button_2_state || button_3_state || button_4_state){
+        if (sequence_pos == 0){
+          if (button_2_state == HIGH){
+            sequence_pos = 1;
+          }
+          else{
+            sequence_pos = 0;
+          }
+        }
+        else if (sequence_pos == 1){
+          if (button_3_state == HIGH){
+            sequence_pos = 2;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 2){
+          if (button_4_state == HIGH){
+            sequence_pos = 3;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 3){
+          if (button_3_state == HIGH){
+            sequence_pos = 4;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 4){
+          if (button_4_state == HIGH){
+            sequence_pos = 5;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 5){
+          if (button_3_state == HIGH){
+            sequence_pos = 6;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 6){
+          if (button_4_state == HIGH){
+            sequence_pos = 7;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 7){
+          if (button_3_state == HIGH){
+            sequence_pos = 8;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 8){
+          if (button_4_state == HIGH){
+            sequence_pos = 9;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
+        }
+        else if (sequence_pos == 9){
+          if (button_3_state == HIGH){
+            // Success! 
+            Serial.println("Entering secret mode");
+            secret_mode = true;
+          }
+          else{
+            if (button_2_state == HIGH){
+              sequence_pos = 1;
+            }
+            else{
+              sequence_pos = 0;
+            }
+          }
         }
         else{
+          Serial.println("Not a state");
           sequence_pos = 0;
         }
       }
-      else if (sequence_pos == 1){
-        if (button_3_state == HIGH){
-          sequence_pos = 2;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 2){
-        if (button_4_state == HIGH){
-          sequence_pos = 3;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 3){
-        if (button_3_state == HIGH){
-          sequence_pos = 4;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 4){
-        if (button_4_state == HIGH){
-          sequence_pos = 5;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 5){
-        if (button_3_state == HIGH){
-          sequence_pos = 6;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 6){
-        if (button_4_state == HIGH){
-          sequence_pos = 7;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 7){
-        if (button_3_state == HIGH){
-          sequence_pos = 8;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 8){
-        if (button_4_state == HIGH){
-          sequence_pos = 9;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else if (sequence_pos == 9){
-        if (button_3_state == HIGH){
-          // Success! 
-          Serial.println("Entering secret mode");
-          secret_mode = true;
-        }
-        else{
-          if (button_2_state == HIGH){
-            sequence_pos = 1;
-          }
-          else{
-            sequence_pos = 0;
-          }
-        }
-      }
-      else{
-        Serial.println("Not a state");
-        sequence_pos = 0;
-      }
 
+      Serial.print("Secret Mode: ");
       if (secret_mode){
+        Serial.println("True");
         // Make the LED Green 
         analogWrite(LED_RED_PIN, 0);
-        analogWrite(LED_GREEN_PIN, 255);
-        analogWrite(LED_BLUE_PIN, 0);
+        analogWrite(LED_YELLOW_PIN, 0);
+        analogWrite(LED_BLUE_PIN, 10);
       }
       else{
-        analogWrite(LED_RED_PIN, 255);
-        analogWrite(LED_GREEN_PIN, 0);
+        Serial.println("False");
+        analogWrite(LED_RED_PIN, 10);
+        analogWrite(LED_YELLOW_PIN, 0);
         analogWrite(LED_BLUE_PIN, 0);
       }
 
