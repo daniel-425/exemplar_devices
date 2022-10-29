@@ -49,9 +49,9 @@ int sequence_pos = 0;
 
 ISR(WDT_vect)
 {
-  analogWrite(LED_RED_PIN, 0);
-  analogWrite(LED_YELLOW_PIN, 0);
-  analogWrite(LED_BLUE_PIN, 0);
+  digitalWrite(LED_RED_PIN, LOW);
+  digitalWrite(LED_YELLOW_PIN, LOW);
+  digitalWrite(LED_BLUE_PIN, LOW);
 }
 
 void setup() {  
@@ -72,9 +72,9 @@ void setup() {
   //Serial.println("\nReset!\n");
 
   // Flash the LEDS for reboot and simulate a boot delay.
-  analogWrite(LED_RED_PIN, 0);
-  analogWrite(LED_YELLOW_PIN, 0);
-  analogWrite(LED_BLUE_PIN, 0);
+  digitalWrite(LED_RED_PIN, LOW);
+  digitalWrite(LED_YELLOW_PIN, LOW);
+  digitalWrite(LED_BLUE_PIN, LOW);
   //delay(500);
 
   // Start the Ethernet
@@ -156,9 +156,23 @@ void loop() {
       // Enable our server to be active. 
       server_active = true;
     }
+    else if (button_2_state == HIGH){
+      server_active = false;
+    }
+
+    if (server_active){
+        digitalWrite(LED_RED_PIN, LOW);
+        digitalWrite(LED_YELLOW_PIN, HIGH);
+        digitalWrite(LED_BLUE_PIN, LOW);
+    }
+    else{
+        digitalWrite(LED_RED_PIN, HIGH);
+        digitalWrite(LED_YELLOW_PIN, LOW);
+        digitalWrite(LED_BLUE_PIN, LOW);
+    }
 
     // Hack
-    server_active = true;
+    //server_active = true;
 
     // Scenario 1 code
     // Check if any clients are trying to connect
@@ -171,6 +185,7 @@ void loop() {
     if (client){
       if (server_active){
         Serial.println("Server active");
+      
         // Reset our read buffer 
         memset(packetBuffer, 0, 256);
         
@@ -377,16 +392,11 @@ void loop() {
     Serial.print("Secret Mode: ");
     if (secret_mode){
       Serial.println("True");
+      
       // Make the LED Green 
-      analogWrite(LED_RED_PIN, 0);
-      analogWrite(LED_YELLOW_PIN, 0);
-      analogWrite(LED_BLUE_PIN, 10);
-    }
-    else{
-      Serial.println("False");
-      analogWrite(LED_RED_PIN, 10);
-      analogWrite(LED_YELLOW_PIN, 0);
-      analogWrite(LED_BLUE_PIN, 0);
+      digitalWrite(LED_RED_PIN, LOW);
+      digitalWrite(LED_YELLOW_PIN, LOW);
+      digitalWrite(LED_BLUE_PIN, HIGH);
     }
 
     // Update the buttons
